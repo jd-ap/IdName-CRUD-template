@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: CRUD template
+  description: |-
+    # Technical proof
+
+  version: 0.1.0-SNAPSHOT
+servers:
+  - url: https://localhost:{port}/api/{version}
+    variables:
+      version:
+        default: v1
+      port:
+        enum:
+          - '8080'
+          - '443'
+          - '8443'
+        default: '8080'
+tags:
+  - name: id-names
+    description: Operations about idName
+paths:
+  /id-names:
+    get:
+      tags:
+        - id-names
+      summary: Search all resources
+      operationId: findAll
+      parameters:
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: sort
+          in: query
+          required: false
+          description: ''
+          schema:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              example: 'id:a'
+              pattern: '^\w+[:a|:d]?$'
+      responses:
+        '200':
+          description: 'successful operation'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdName'
+        '204':
+          description: 'successfully but your response is empty'
+        '400':
+          description: 'wrong parameters or request body'
+        '404':
+          description: 'Resource not found'
+        '500':
+          description: 'generic error'
+    post:
+      tags:
+        - id-names
+      summary: Create new resource
+      operationId: createNew
+      requestBody:
+        description: Created new object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdName'
+      responses:
+        '201':
+          description: 'successful operation'
+        '400':
+          description: 'wrong parameters or request body'
+        '404':
+          description: 'Resource not found'
+        '500':
+          description: 'generic error'
+  /id-names/{id}:
+    get:
+      tags:
+        - id-names
+      summary: Get resource by id
+      operationId: findById
+      parameters:
+        - name: id
+          in: path
+          description: 'The identifier that needs to be fetched. '
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 'successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdName'
+        '400':
+          description: 'wrong parameters or request body'
+        '404':
+          description: 'Resource not found'
+        '500':
+          description: 'generic error'
+    put:
+      tags:
+        - id-names
+      summary: Update a existing resource
+      operationId: updateById
+      parameters:
+        - name: id
+          in: path
+          description: identifier that need to be updated
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Update an existent resource in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IdName'
+      responses:
+        '200':
+          description: 'successful operation'
+        '400':
+          description: 'wrong parameters or request body'
+        '404':
+          description: 'Resource not found'
+        '500':
+          description: 'generic error'
+    delete:
+      tags:
+        - id-names
+      summary: Delete a existing resource
+      description: identifier that need to be deleted.
+      operationId: deleteById
+      parameters:
+        - name: id
+          in: path
+          description: The identifier that needs to be deleted
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'resource not found'
+        '400':
+          description: 'invalid identifier supplied'
+        '500':
+          description: 'generic error'
+  /id-names/name/{name}:
+    get:
+      tags:
+        - id-names
+      summary: Get resource list by a name
+      operationId: findByName
+      parameters:
+        - name: name
+          in: path
+          description: The name that needs to be fetched.
+          required: true
+          schema:
+            type: string
+            nullable: false
+            minLength: 3
+            maxLength: 64
+        - name: pageNumber
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+        - name: sort
+          in: query
+          required: false
+          description: ''
+          schema:
+            type: array
+            uniqueItems: true
+            items:
+              type: string
+              example: 'id:a'
+              pattern: '^\w+[:a|:d]?$'
+      responses:
+        '200':
+          description: 'successful operation'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IdName'
+        '400':
+          description: 'invalid name supplied'
+        '404':
+          description: 'Resource not found'
+        '500':
+          description: 'generic error'
+components:
+  schemas:
+    IdName:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          example: 'e2042d1d-87eb-4677-9d55-4a017bfa590e'
+        name:
+          type: string
+          example: 'aaa'
+          minLength: 3
+          maxLength: 64
+        active:
+          type: boolean
+          readOnly: true
+          example: true
+      required:
+        - name

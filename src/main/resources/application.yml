@@ -1,0 +1,43 @@
+info.app:
+  name: @project.name@
+  description: @project.description@
+  version: v@project.version@
+
+server:
+  servlet.context-path: /api/v1
+  port: 8080
+
+spring:
+  application.name: ${info.app.name}
+  datasource:
+    url: jdbc:h2:mem:tech_proof_db
+    username: guest
+    password: changeIt
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+  h2.console:
+    path: /h2-console
+    enabled: true
+    settings.trace: false
+    settings.web-allow-others: true
+
+openapi.cRUDTemplate.base-path: /
+
+springdoc:
+  packagesToScan:
+    - crud.tech.proof.web
+    - crud.tech.proof.model
+    - crud.tech.proof.controller
+  swagger-ui:
+    operationsSorter: alpha
+    tagsSorter: alpha
+    use-root-path: true
+
+logging:
+  level:
+    root: ERROR
+    org.springframework: ERROR
+    crud.tech.proof: TRACE
+  pattern.console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){blue} %36X{Trace-Id} %clr(%5level){faint} %clr(---){faint} %-40.40clr(%logger{0}.%M){blue} %clr(:){red} %clr(%msg){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"

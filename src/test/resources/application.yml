@@ -1,0 +1,25 @@
+
+server:
+  servlet.context-path: /
+  port: 49432
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:e2e_db
+    username: guest
+    password: changeIt
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true
+  cache.type: "none"
+
+openapi.cRUDTemplate.base-path: /
+
+logging:
+  level:
+    root: ERROR
+    org.springframework: ERROR
+    crud.tech.proof: TRACE
+  pattern.console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){blue} %clr(%5level){faint} %clr(---){faint} %-40.40clr(%logger{0}.%M){blue} %clr(:){red} %clr(%msg){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
