@@ -11,6 +11,8 @@ public sealed interface IdNameService permits IdNameServiceImpl {
 
     Page<IdName> findAll(Pageable pageable);
 
+    Page<IdName> findAll(String q, Pageable pageable);
+
     Optional<IdName> findOneById(UUID id);
 
     Page<IdName> findAllByNameThatContain(String name, Pageable pageable);

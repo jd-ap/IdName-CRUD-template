@@ -23,7 +23,7 @@ spring:
     settings.trace: false
     settings.web-allow-others: true
 
-openapi.cRUDTemplate.base-path: /
+openapi.apiCrudTemplate.base-path: /
 
 springdoc:
   packagesToScan:

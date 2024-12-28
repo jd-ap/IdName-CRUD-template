@@ -1,4 +1,4 @@
-# IdName CRUD template
+# crud template
 
 Project demo
 

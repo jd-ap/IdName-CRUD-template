@@ -24,7 +24,7 @@ public non-sealed class IdNameServiceImpl implements IdNameService {
         return idNameRepository.findAll(pageable);
     }
 
-    public Page<IdName> findallFuzzy(String q, Pageable pageable) {
+    public Page<IdName> findAll(String q, Pageable pageable) {
         return idNameRepository.findAllFuzzy(q, pageable);
     }
 

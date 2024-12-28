@@ -17,11 +17,20 @@ In the project root directory, run:
 
 ````shell
 mvn clean archetype:create-from-project -Darchetype.properties=archetype.properties
+# replaces literals with regex 
+# > metadata_file=target/generated-sources/archetype/src/main/resources/META-INF/maven/archetype-metadata.xml
+cp archetype-metadata.xml target/generated-sources/archetype/src/main/resources/META-INF/maven/archetype-metadata.xml
 ````
 
 To install the archetype in local execute the following commands:
 
 ````shell
-cd web-service-archetype/target/generated-sources/archetype
+cd target/generated-sources/archetype
 mvn clean install
+````
+
+Create a project from a local repository
+
+````shell
+mvn archetype:generate -DarchetypeCatalog=local -DarchetypeGroupId=crud.tech.proof -DarchetypeArtifactId=techProof-crud-template
 ````

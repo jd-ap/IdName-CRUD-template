@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor
+        xsi:schemaLocation="https://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0 https://maven.apache.org/xsd/archetype-descriptor-1.1.0.xsd"
+        name="IdName-CRUD-template"
+        xmlns="https://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <requiredProperties>
+        <!-- metadata -->
+        <requiredProperty key="packageName">
+            <!--defaultValue>${artifactId.toLowerCase().replaceAll("\\p{Punct}", '_')}</defaultValue-->
+            <defaultValue>${artifactId.toLowerCase().replaceAll("[\\s!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]", '_')}
+            </defaultValue>
+        </requiredProperty>
+        <requiredProperty key="artifactIdInContainerNameFormat">
+            <!--defaultValue>${artifactId.toLowerCase().replaceAll("\\p{Punct}", '-')}-webapp</defaultValue-->
+            <defaultValue>${packageName.replaceAll("_", '-')}-webapp</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="name">
+            <!--defaultValue>${artifactId.toLowerCase().replaceAll("\\p{Punct}", ' ').trim()}</defaultValue-->
+            <defaultValue>${packageName.replaceAll("_", " ")}</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="nameAsRequestMappingOpenApi">
+            <!--defaultValue>api${java.util.stream.Stream.of(name.split(" ")).map(it -> it.substring(0,1).toUpperCase()+it.substring(1)).collect(java.util.stream.Collectors.joining())}</defaultValue-->
+            <defaultValue>api${name.substring(0,1).toUpperCase()}${name.substring(1).replaceAll(" ", "")}</defaultValue>
+        </requiredProperty>
+
+        <!-- entity -->
+        <requiredProperty key="entity">
+            <defaultValue/>
+        </requiredProperty>
+        <requiredProperty key="entityInPascalCaseFormat">
+            <!--defaultValue>${java.util.Arrays.stream((entity).split("(?=\\p{Upper})")).map(it -> it.replaceAll("\\p{Punct}","")).map(it -> it.substring(0,1).toUpperCase()+it.substring(1).toLowerCase()).filter(s -> !s.isEmpty()).collect(Collectors.joining())}</defaultValue-->
+            <defaultValue>${entity.replaceAll("[\\s!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]", "").substring(0,
+                1).toUpperCase()}${entity.substring(1).toLowerCase().replaceAll("[\\s!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]",
+                "")}
+            </defaultValue>
+        </requiredProperty>
+        <requiredProperty key="entityInCamelCaseFormat">
+            <defaultValue>
+                ${entityInPascalCaseFormat.substring(0, 1).toLowerCase()}${entityInPascalCaseFormat.substring(1)}
+            </defaultValue>
+        </requiredProperty>
+        <requiredProperty key="entityAsTableName">
+            <!--defaultValue>${entityInPascalCaseFormat.replaceAll("(?=\\p{Upper})","_").toUpperCase()}</defaultValue-->
+            <defaultValue>${entity.replaceAll("[\\s!\"#$%&'()*+,-./:;<=>?@\\^_`{|}~]", "_").toUpperCase()}
+            </defaultValue>
+        </requiredProperty>
+        <requiredProperty key="entityInTagFormat">
+            <defaultValue>${entityAsTableName.toLowerCase().replace('_','-')}</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="entityInTagPascalCaseFormat">
+            <!--defaultValue>${java.util.Arrays.stream(entityAsTableName.split("_")).map(it -> it.substring(0,1).toUpperCase()+it.substring(1).toLowerCase()).collect(Collectors.joining("_"))}</defaultValue-->
+            <defaultValue>
+                ${entityAsTableName.substring(0,1).toUpperCase()}${entityAsTableName.substring(1).toLowerCase()}
+            </defaultValue>
+        </requiredProperty>
+
+        <!-- literals -->
+        <requiredProperty key="description">
+            <defaultValue/>
+        </requiredProperty>
+        <requiredProperty key="gitRepository">
+            <defaultValue/>
+        </requiredProperty>
+        <requiredProperty key="prefixDotfile">
+            <defaultValue>.</defaultValue>
+        </requiredProperty>
+    </requiredProperties>
+    <fileSets>
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/main/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.yaml</include>
+            </includes>
+        </fileSet>
+        <fileSet encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" packaged="true" encoding="UTF-8">
+            <directory>src/test/java</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>**/*.yml</include>
+            </includes>
+        </fileSet>
+        <fileSet encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>**/*.sql</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="true" encoding="UTF-8">
+            <includes>
+                <include>README.md</include>
+                <include>STATEMENT.md</include>
+            </includes>
+        </fileSet>
+        <fileSet encoding="UTF-8">
+            <includes>
+                <include>containerfile</include>
+                <include>dot.gitignore</include>
+                <include>.gitignore</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</archetype-descriptor>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.5</version>
+        <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -15,7 +15,7 @@
     <artifactId>IdName-CRUD-template</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <name>CRUD template</name>
-    <description>Project demo</description>
+    <description>Technical proof</description>
 
     <url>url-repository.git</url>
 
@@ -47,14 +47,13 @@
 
         <!-- custom properties -->
         <validation-api.version>3.1.0</validation-api.version>
-        <springdoc-openapi.version>1.8.0</springdoc-openapi.version>
-        <springdoc-openapi-starter-webmvc-ui.version>2.6.0</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.7.0</springdoc-openapi-starter-webmvc-ui.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
 
         <openapi-generator-maven-plugin.version>7.9.0</openapi-generator-maven-plugin.version>
 
         <!-- force vulnerable version upgrade -->
-        <xmlunit2.version>2.10.0</xmlunit2.version>
+        <!--logback.version>1.5.13</logback.version-->
     </properties>
 
     <dependencies>

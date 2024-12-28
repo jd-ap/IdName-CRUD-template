@@ -29,12 +29,13 @@ public class WebTraceIdFilter implements Filter {
         res.addHeader(X_TRACE_ID, txId);
 
         long startTime = System.currentTimeMillis();
-        log.trace("Request {} {}", String.format("%6s", req.getMethod()), req.getRequestURI());
+        String reqUrlWithQuery = req.getRequestURI().concat(null != req.getQueryString() ? "?".concat(req.getQueryString()) : "");
+        log.info("Request {} {}", String.format("%6s", req.getMethod()), reqUrlWithQuery);
 
         filterChain.doFilter(servletRequest, servletResponse);
 
         startTime = System.currentTimeMillis() - startTime;
-        log.trace("Response {} in {}", res.getStatus(),
+        log.info("Response {} in {}", res.getStatus(),
                 String.format("%02d:%02d.%03d", TimeUnit.MILLISECONDS.toMinutes(startTime),
                         TimeUnit.MILLISECONDS.toSeconds(startTime) % 60,
                         TimeUnit.MILLISECONDS.toMillis(startTime) % 100));

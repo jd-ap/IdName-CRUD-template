@@ -1,4 +1,3 @@
-
 server:
   servlet.context-path: /
   port: 49432
@@ -22,4 +21,4 @@ logging:
     root: ERROR
     org.springframework: ERROR
     crud.tech.proof: TRACE
-  pattern.console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){blue} %clr(%5level){faint} %clr(---){faint} %-40.40clr(%logger{0}.%M){blue} %clr(:){red} %clr(%msg){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"
+  pattern.console: "%clr(%d{HH:mm:ss.SSS}){blue} %36X{Trace-Id} %clr(%5level){faint} %clr(:){red} %clr(%msg){faint}%n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}"

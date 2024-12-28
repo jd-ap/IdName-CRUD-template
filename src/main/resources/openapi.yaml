@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: CRUD template
+  title: api crud template
   description: |-
     # Technical proof
 
@@ -17,24 +17,34 @@ servers:
           - '8443'
         default: '8080'
 tags:
-  - name: id-names
+  - name: ids-names
     description: Operations about idName
 paths:
-  /id-names:
+  /ids-names:
     get:
       tags:
-        - id-names
+        - ids-names
       summary: Search all resources
       operationId: findAll
       parameters:
+        - name: q
+          in: query
+          description: 'Fragment that must be present in the Identifier or name.'
+          required: false
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 64
         - name: pageNumber
           in: query
+          description: 'Current page number.'
           required: false
           schema:
             type: integer
             minimum: 1
         - name: pageSize
           in: query
+          description: 'Number of visible elements on the page'
           required: false
           schema:
             type: integer
@@ -42,8 +52,8 @@ paths:
             maximum: 100
         - name: sort
           in: query
+          description: 'List of sorting criteria'
           required: false
-          description: ''
           schema:
             type: array
             uniqueItems: true
@@ -53,24 +63,18 @@ paths:
               pattern: '^\w+[:a|:d]?$'
       responses:
         '200':
-          description: 'successful operation'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdName'
+          $ref: '#/components/responses/OkPage'
         '204':
-          description: 'successfully but your response is empty'
+          $ref: '#/components/responses/NoContent'
         '400':
-          description: 'wrong parameters or request body'
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: 'Resource not found'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: 'generic error'
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
-        - id-names
+        - ids-names
       summary: Create new resource
       operationId: createNew
       requestBody:
@@ -83,15 +87,15 @@ paths:
         '201':
           description: 'successful operation'
         '400':
-          description: 'wrong parameters or request body'
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: 'Resource not found'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: 'generic error'
-  /id-names/{id}:
+          $ref: '#/components/responses/InternalServerError'
+  /ids-names/{id}:
     get:
       tags:
-        - id-names
+        - ids-names
       summary: Get resource by id
       operationId: findById
       parameters:
@@ -104,20 +108,16 @@ paths:
             format: uuid
       responses:
         '200':
-          description: 'successful operation'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IdName'
+          $ref: '#/components/responses/Ok'
         '400':
-          description: 'wrong parameters or request body'
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: 'Resource not found'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: 'generic error'
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
-        - id-names
+        - ids-names
       summary: Update a existing resource
       operationId: updateById
       parameters:
@@ -138,14 +138,14 @@ paths:
         '200':
           description: 'successful operation'
         '400':
-          description: 'wrong parameters or request body'
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: 'Resource not found'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: 'generic error'
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
-        - id-names
+        - ids-names
       summary: Delete a existing resource
       description: identifier that need to be deleted.
       operationId: deleteById
@@ -159,15 +159,15 @@ paths:
             format: uuid
       responses:
         '204':
-          description: 'resource not found'
+          $ref: '#/components/responses/NoContent'
         '400':
-          description: 'invalid identifier supplied'
+          $ref: '#/components/responses/BadRequest'
         '500':
-          description: 'generic error'
-  /id-names/name/{name}:
+          $ref: '#/components/responses/InternalServerError'
+  /ids-names/name/{name}:
     get:
       tags:
-        - id-names
+        - ids-names
       summary: Get resource list by a name
       operationId: findByName
       parameters:
@@ -206,19 +206,13 @@ paths:
               pattern: '^\w+[:a|:d]?$'
       responses:
         '200':
-          description: 'successful operation'
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IdName'
+          $ref: '#/components/responses/OkPage'
         '400':
-          description: 'invalid name supplied'
+          $ref: '#/components/responses/BadRequest'
         '404':
-          description: 'Resource not found'
+          $ref: '#/components/responses/NotFound'
         '500':
-          description: 'generic error'
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     IdName:
@@ -240,3 +234,102 @@ components:
           example: true
       required:
         - name
+    Error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: 'a URI identifier that categorizes the error'
+          example: '/errors/incorrect-user-pass'
+        title:
+          type: string
+          description: 'a brief, human-readable message about the error'
+          example: 'Incorrect username or password.'
+        detail:
+          type: array
+          description: 'a human-readable explanation of the error'
+          items:
+            type: string
+          example: '[Authentication failed due to incorrect username or password.]'
+  responses:
+    Ok:
+      description: 'successful operation'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IdName'
+    OkPage:
+      description: 'successful operation'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/IdName'
+      headers:
+        x-Pagination-Current:
+          description: 'Current page number.'
+          schema:
+            type: integer
+            example: '0'
+        x-Pagination-Size:
+          description: 'Number of visible elements on the page'
+          schema:
+            type: integer
+            example: '1'
+        x-Pagination-Total:
+          description: 'Number total of pages'
+          schema:
+            type: integer
+            example: '1'
+        x-Pagination-HasNext:
+          description: 'indicates it is possible to paginate to the following page'
+          schema:
+            type: boolean
+            example: 'false'
+        x-Pagination-HasPrevious:
+          description: 'indicates it is possible to paginate to the previous page'
+          schema:
+            type: boolean
+            example: 'false'
+        x-Pagination-NextPage:
+          description: 'Next page number.'
+          schema:
+            type: integer
+            example: '1'
+        x-Pagination-PreviousPage:
+          description: 'Previous page number.'
+          schema:
+            type: integer
+            example: '1'
+      links:
+        getNextPage:
+          operationId: findAll
+          parameters:
+            q: '$request.query.q'
+            pageNumber: '$response.header.x-Pagination-NextPage'
+            pageSize: '$request.query.pageSize'
+            sort: '$request.query.sort'
+        getPreviousPage:
+          operationId: findAll
+          parameters:
+            q: '$request.query.q'
+            pageNumber: '$response.header.x-Pagination-PreviousPage'
+            pageSize: '$request.query.pageSize'
+            sort: '$request.query.sort'
+    NoContent:
+      description: 'successfully but your response is empty'
+    NotFound:
+      description: 'Resource not found'
+    InternalServerError:
+      description: 'generic error'
+    BadRequest:
+      description: 'wrong parameters or request body'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: ''
+    Forbidden:
+      description: ''

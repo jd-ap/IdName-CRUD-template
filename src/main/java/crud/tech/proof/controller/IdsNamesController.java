@@ -2,9 +2,8 @@ package crud.tech.proof.controller;
 
 import crud.tech.proof.model.IdNameDto;
 import crud.tech.proof.service.IdNameService;
-import crud.tech.proof.web.IdNamesApi;
+import crud.tech.proof.web.IdsNamesApi;
 import crud.tech.proof.web.WebMapper;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,11 +24,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping
-public class Id_NamesController implements IdNamesApi {
+public class IdsNamesController implements IdsNamesApi {
 
     private final IdNameService idNameService;
 
-    private final Function<UUID, URI> toLink = id -> linkTo(methodOn(Id_NamesController.class).findById(id)).toUri();
+    private final Function<UUID, URI> toLink = id -> linkTo(methodOn(IdsNamesController.class).findById(id)).toUri();
 
     @Override
     public ResponseEntity<Void> createNew(IdNameDto idNameDto) {
@@ -40,9 +39,11 @@ public class Id_NamesController implements IdNamesApi {
     }
 
     @Override
-    public ResponseEntity<List<IdNameDto>> findAll(Integer pageNumber, Integer pageSize, Set<String> sort) {
+    public ResponseEntity<List<IdNameDto>> findAll(String q, Integer pageNumber, Integer pageSize, Set<String> sort) {
         var pageable = WebMapper.newPageRequest(pageNumber, pageSize, sort);
-        var page = idNameService.findAll(pageable);
+        var page = (null == q || q.isBlank())
+                ? idNameService.findAll(pageable)
+                : idNameService.findAll(q, pageable);
 
         return WebMapper.toPageResponse(page);
     }

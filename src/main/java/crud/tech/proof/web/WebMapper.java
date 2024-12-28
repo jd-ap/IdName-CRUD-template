@@ -30,12 +30,15 @@ public class WebMapper {
                     }));
 
     private static final Function<Page<IdName>, HttpHeaders> generatePaginationHeaders = page -> {
+        // WARN: REMEMBER page.getNumber index starts from zero
         var headers = new HttpHeaders();
-        headers.add("x-Pagination-Current", String.valueOf(page.getNumber()));
+        headers.add("x-Pagination-Current", String.valueOf(page.getNumber() + 1));
         headers.add("x-Pagination-Size", String.valueOf(page.getNumberOfElements()));
         headers.add("x-Pagination-Total", String.valueOf(page.getTotalPages()));
         headers.add("x-Pagination-HasNext", String.valueOf(page.hasNext()));
         headers.add("x-Pagination-HasPrevious", String.valueOf(page.hasPrevious()));
+        headers.add("x-Pagination-NextPage", String.valueOf(page.hasNext() ? page.getNumber() + 2 : page.getNumber() + 1));
+        headers.add("x-Pagination-PreviousPage", String.valueOf(page.hasPrevious() ? page.getNumber() : page.getNumber() + 1));
         return headers;
     };
 
